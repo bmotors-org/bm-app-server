@@ -1,0 +1,28 @@
+{
+  "name": "bm-server",
+  "version": "1.0.0",
+  "description": "Server for B-Motors android app",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "yarn run esbuild ./src --bundle --platform=node --format=esm --minify --sourcemap --external:./node_modules/* --outfile=dist/index.js",
+    "build-dev": "yarn run build && NODE_ENV=development node --inspect --es-module-specifier-resolution=node dist/index.js",
+    "dev": "nodemon --ext ts --exec \"yarn run build-dev\"",
+    "start": "yarn run build && NODE_ENV=production node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@neo4j/graphql": "^3.3.0",
+    "apollo-server": "^3.8.1",
+    "dotenv": "^16.0.1",
+    "graphql": "^16.5.0",
+    "neo4j-driver": "^4.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.36",
+    "esbuild": "^0.14.42",
+    "nodemon": "^2.0.16"
+  }
+}
