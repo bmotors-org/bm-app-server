@@ -1,12 +1,14 @@
 import express from "express";
-import {OGM} from "@neo4j/graphql-ogm";
+import {ApolloServer} from "apollo-server-express";
+import {ApolloServerPluginDrainHttpServer} from "apollo-server-core";
 import neo4j from "neo4j-driver";
 import {createClient} from "redis";
 import {typeDefs} from "./typeDefs";
 import {resolvers} from "./resolvers";
 import {router} from "./routes";
 import "dotenv/config";
-
+import http from "http";
+import {Neo4jGraphQL} from "@neo4j/graphql";
 
 const driver = neo4j.driver(
   process.env.NEO4J_URI,
@@ -16,7 +18,7 @@ const driver = neo4j.driver(
   )
 );
 
-const ogm = new OGM({typeDefs, resolvers, driver});
+const neoSchema = new Neo4jGraphQL({typeDefs, driver});
 
 const client = createClient();
 
@@ -32,14 +34,27 @@ client.on("error", (err) => console.error("Redis Client Error", err));
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json())
+  .use("/api", router);
 
-app.use("/api", router);
+const httpServer = http.createServer(app);
 
 const port = process.env.PORT;
 
-ogm.init().then(() => {
-  app.listen(port, () => {
-    console.log(`Server started on port ${port}`);
+neoSchema.getSchema().then(async (schema) => {
+  const server = new ApolloServer({
+    schema,
+    resolvers,
+    csrfPrevention: true,
+    plugins: [ApolloServerPluginDrainHttpServer({httpServer})],
   });
+
+  await server.start();
+  server.applyMiddleware({app, path: "/graphql"});
+  await new Promise<void>(resolve => httpServer.listen({port}, resolve));
+  console.log(`Server ready at http://localhost:${port}${server.graphqlPath}`);
 });
+
+
+
+

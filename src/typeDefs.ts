@@ -1,4 +1,6 @@
-export const typeDefs = `
+import {gql} from "apollo-server-core";
+
+export const typeDefs = gql`
     type Customer {
         id: ID! @id
         name: String!
