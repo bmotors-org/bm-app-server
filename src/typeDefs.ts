@@ -1,6 +1,4 @@
-import {gql} from "apollo-server";
-
-export const typeDefs = gql`
+export const typeDefs = `
     type Customer {
         id: ID! @id
         name: String!
@@ -47,4 +45,9 @@ export const typeDefs = gql`
         createdAt: DateTime! @timestamp(operations: [CREATE])
         updatedAt: DateTime! @timestamp(operations: [UPDATE])
     }
+    
+    type AuthFunctions {
+        authorize(phone: String!): String!
+    }
 `;
+
