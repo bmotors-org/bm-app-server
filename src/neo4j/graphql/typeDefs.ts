@@ -1,6 +1,4 @@
-import {gql} from "apollo-server-core";
-
-export const typeDefs = gql`
+export const typeDefs = `
     type Customer {
         id: ID! @id
         name: String!
@@ -51,5 +49,5 @@ export const typeDefs = gql`
     type AuthFunctions {
         authorize(phone: String!): String!
     }
-`;
+`
 

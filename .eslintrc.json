@@ -28,8 +28,8 @@
       "double"
     ],
     "semi": [
-      "error",
-      "always"
+      2,
+      "never"
     ]
   }
 }

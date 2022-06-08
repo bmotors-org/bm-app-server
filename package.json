@@ -6,7 +6,7 @@
   "type": "commonjs",
   "module": "",
   "scripts": {
-    "build": "yarn run esbuild ./src --bundle --platform=node --sourcemap --external:./node_modules/* --outfile=dist/index.js",
+    "build": "yarn run esbuild ./src/server.ts --bundle --platform=node --sourcemap --external:./node_modules/* --outfile=dist/index.js",
     "build-dev": "yarn run build && NODE_ENV=development node --inspect dist/index.js",
     "dev": "nodemon --ext ts --exec \"yarn run build-dev\"",
     "start": "yarn run build && NODE_ENV=production node dist/index.js"
