@@ -2,11 +2,11 @@ import {Request} from "express"
 
 export interface OtpVerifyRequest extends Request {
   body: {
-    code: string,
-    number: string
+    otpCode: string,
+    phoneNumber: string
   }
 }
 
 export interface PhoneValidityCheckRequest extends Request {
-  body: { number: string }
+  body: { phoneNumber: string }
 }

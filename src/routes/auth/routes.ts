@@ -9,11 +9,11 @@ const messagebird = initMb(keys.messagebird.liveAccessKey)
 const router = express.Router()
 
 router.post("/verify-otp", (req: OtpVerifyRequest, res) => {
-  const {code, number} = req.body
+  const {otpCode, phoneNumber} = req.body
 
-  client.get(number).then(result => {
-    console.log(result, `From key ${number}`)
-    if (result === code) {
+  client.get(phoneNumber).then(result => {
+    console.log(result, `From key ${phoneNumber}`)
+    if (result === otpCode) {
       res.json({
         success: true,
         message: "OTP verified"
@@ -26,7 +26,7 @@ router.post("/verify-otp", (req: OtpVerifyRequest, res) => {
 
 router.post("/verify-phone-number", (req: PhoneValidityCheckRequest, res) => {
   console.log(req.body, "here")
-  const phoneNumber = req.body.number
+  const {phoneNumber} = req.body
   const otp = Math.floor(Math.random() * 10000).toString()
 
   client.setEx(phoneNumber, 60 * 5, otp).then(result => {
