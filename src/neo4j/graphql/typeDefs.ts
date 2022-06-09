@@ -3,7 +3,7 @@ export const typeDefs = `
         id: ID! @id
         name: String!
         email: String!
-        phone: String!
+        phoneNumber: String!
         savedAddresses: [String!]!
         address: String!
         orders: [Order!]! @relationship(type: "CREATED", direction: OUT, properties: "created")
