@@ -3,8 +3,9 @@ import initMb from "messagebird"
 import {client} from "../../redis"
 import {keys} from "../../keys"
 import {OtpVerifyRequest, PhoneValidityCheckRequest} from "./interfaces"
+import {createCustomer} from "../../neo4j/methods/createCustomer"
 
-const messagebird = initMb(keys.messagebird.liveAccessKey)
+const messagebird = initMb(keys.messagebird.testAccessKey)
 
 const router = express.Router()
 
@@ -18,6 +19,12 @@ router.post("/verify-otp", (req: OtpVerifyRequest, res) => {
         console.log(result, `Deleted key ${phoneNumber}`)
       }).catch(err => {
         console.error(err)
+      })
+
+      createCustomer(phoneNumber).then(result => {
+        console.log("customer created", result)
+      }).catch(err => {
+        console.error("DB operation failed", err)
       })
 
       res.json({
@@ -47,11 +54,11 @@ router.post("/verify-phone-number", (req: PhoneValidityCheckRequest, res) => {
     body: "Your OTP is " + otp
   }, function (err, response) {
     if (err) {
-      console.log("ERROR:")
-      console.log(err)
+      console.log("Messagebird Error:")
+      console.error(err.message)
     } else {
-      console.log("SUCCESS:")
-      console.log(response)
+      console.log("Messagebird success:")
+      console.log(response.body)
     }
   })
 
