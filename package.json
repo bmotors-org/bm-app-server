@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "Server for B-Motors android app",
   "main": "index.js",
-  "type": "commonjs",
+  "type": "module",
   "module": "",
   "scripts": {
-    "build": "yarn run esbuild ./src/server.ts --bundle --platform=node --sourcemap --external:./node_modules/* --outfile=dist/index.js",
+    "build": "yarn run esbuild ./src/server.ts --bundle --format=esm --platform=node --sourcemap --external:./node_modules/* --outfile=dist/index.js",
     "build-dev": "yarn run build && NODE_ENV=development node --inspect dist/index.js",
     "dev": "nodemon --ext ts --exec \"yarn run build-dev\"",
     "start": "yarn run build && NODE_ENV=production node dist/index.js"
@@ -21,12 +21,15 @@
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "graphql": "^16.5.0",
+    "helmet": "^5.1.0",
     "messagebird": "^3.8.0",
+    "morgan": "^1.10.0",
     "neo4j-driver": "^4.4.5",
     "redis": "^4.1.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
+    "@types/morgan": "^1.9.3",
     "@types/node": "^17.0.36",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "@typescript-eslint/parser": "^5.27.0",
