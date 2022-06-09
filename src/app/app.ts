@@ -1,8 +1,16 @@
 import express from "express"
-import {router} from "../routes"
+import morgan from "morgan"
+import {baseFragment, router} from "../routes"
+
+const {default: helmet} = await import("helmet")
 
 export const app = express()
 
-app.use(express.json())
-  .use("/api", router.authRoutes)
+app
+  .use(helmet())
+  .use(express.json())
+  .use(`${baseFragment}/auth`, router.authRoutes)
+  .use(morgan("tiny"))
+
+
 
