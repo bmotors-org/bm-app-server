@@ -1,6 +1,6 @@
 import express from "express"
-import {client} from "../../redis"
 import initMb from "messagebird"
+import {client} from "../../redis"
 import {keys} from "../../keys"
 import {OtpVerifyRequest, PhoneValidityCheckRequest} from "./interfaces"
 
@@ -14,6 +14,12 @@ router.post("/verify-otp", (req: OtpVerifyRequest, res) => {
   client.get(phoneNumber).then(result => {
     console.log(result, `From key ${phoneNumber}`)
     if (result === otpCode) {
+      client.del(phoneNumber).then(result => {
+        console.log(result, `Deleted key ${phoneNumber}`)
+      }).catch(err => {
+        console.error(err)
+      })
+
       res.json({
         success: true,
         message: "OTP verified"
