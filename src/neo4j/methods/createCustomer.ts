@@ -1,20 +1,10 @@
-import {neo4jDriver} from "../index"
+import {QueryResult} from "neo4j-driver"
+import {neo4jSession} from "../index"
 
-const session = neo4jDriver.session()
-
-export async function createCustomer(phoneNumber) {
-  try {
-    const result = await session.run(
-      "MERGE (c:Customer {phone: $phoneNumber}) RETURN c",
-      {phoneNumber}
-    )
-    console.log("result:", result)
-    const singleRecord = result.records[0]
-    const node = singleRecord.get(0)
-
-    console.log("node property name", node.properties.name)
-  } finally {
-    await session.close()
-  }
+export function createCustomer(phoneNumber: string): Promise<QueryResult> {
+  return neo4jSession.run(
+    "MERGE (c:Customer {phone: $phoneNumber}) RETURN c",
+    {phoneNumber}
+  )
 }
 
