@@ -8,3 +8,5 @@ export const neo4jDriver = neo4j.driver(
     keys.neo4j.password,
   )
 )
+
+export const neo4jSession = neo4jDriver.session()
