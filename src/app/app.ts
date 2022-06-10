@@ -1,8 +1,7 @@
 import express from "express"
 import morgan from "morgan"
+import helmet from "helmet";
 import {baseFragment, router} from "../routes"
-
-const {default: helmet} = await import("helmet")
 
 export const app = express()
 
