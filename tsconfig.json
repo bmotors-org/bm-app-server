@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
-    "module": "esnext",
+    "module": "CommonJS",
     "esModuleInterop": true, // respected by esbuild
     "target": "ESNext", // respected by esbuild
-    "moduleResolution": "NodeNext"
+    "moduleResolution": "Node12",
+    "noImplicitAny": true,
+    "strict": true,
+    "useUnknownInCatchVariables": true
   }
 }
