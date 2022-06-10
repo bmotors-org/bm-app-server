@@ -1,20 +1,19 @@
 import {createClient} from "redis"
+import {errDetails} from "../error/errDetails"
 
-export const client = createClient({
+export const redisClient = createClient({
   socket: {
     host: "localhost",
     port: 6379
   }
 })
 
-client.on("error", (err) => {
+redisClient.on("error", (err) => {
   console.log("Redis Client Error", err)
 });
 
-(async () => {
-  try {
-    await client.connect()
-  } catch (err) {
-    console.error(err)
-  }
-})()
+try {
+  await redisClient.connect()
+} catch (err) {
+  console.error(errDetails(err))
+}
