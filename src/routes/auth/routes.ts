@@ -18,10 +18,7 @@ router.post("/verify-otp", async (req: OtpVerifyRequest, res) => {
         await redisClient.del(phoneNumber)
 
         try {
-          const customer = await createCustomer(phoneNumber)
-
-          console.log("Created customer:", customer.records[0].get(0))
-          console.log("Query summary:", customer.summary.counters, customer.summary.updateStatistics)
+          await createCustomer(phoneNumber)
 
           res.sendStatus(200)
         } catch (error) {
