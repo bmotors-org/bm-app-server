@@ -15,43 +15,30 @@ router.post("/verify-otp", async (req: OtpVerifyRequest, res) => {
     const value = await redisClient.get(phoneNumber)
     if (value === otpCode) {
       try {
-        const delKey = await redisClient.del(phoneNumber)
-        console.log("Deled key:", delKey)
+        await redisClient.del(phoneNumber)
 
         try {
           const customer = await createCustomer(phoneNumber)
 
-          console.log("Created customer:", customer.records)
-          console.log("Query summary:", customer.summary)
+          console.log("Created customer:", customer.records[0].get(0))
+          console.log("Query summary:", customer.summary.counters, customer.summary.updateStatistics)
 
-          res.json({
-            status: "success",
-            message: "OTP verified successfully"
-          })
+          res.sendStatus(200)
         } catch (error) {
           console.error(errDetails(error))
 
-          res.json({
-            status: "error",
-            message: "Error while creating profile"
-          })
+          res.sendStatus(500)
         }
       } catch (error) {
         console.error(errDetails(error))
 
-        res.json({
-          success: false,
-          message: "Error deleting key from redis",
-        })
+        res.sendStatus(500)
       }
     }
   } catch (error) {
     console.error(errDetails(error))
 
-    res.json({
-      success: false,
-      message: "Error getting key from redis",
-    })
+    res.sendStatus(500)
   }
 })
 
@@ -74,26 +61,17 @@ router.post("/verify-phone-number", async (req: PhoneValidityCheckRequest, res) 
           console.log("Sent OTP SMS:", response)
 
           if (response) {
-            res.json({
-              status: "success",
-              message: "OTP sent successfully"
-            })
+            res.sendStatus(200)
           }
         } catch (error) {
           console.error(errDetails(error))
 
-          res.json({
-            status: "error",
-            message: "Error while sending OTP"
-          })
+          res.sendStatus(500)
         }
       } catch (error) {
         console.error(errDetails(error))
 
-        res.json({
-          success: false,
-          message: "Error retrieving otp",
-        })
+        res.sendStatus(500)
       }
     } else {
       try {
@@ -101,27 +79,18 @@ router.post("/verify-phone-number", async (req: PhoneValidityCheckRequest, res) 
         console.log("Sent OTP SMS:", response)
 
         if (response) {
-          res.json({
-            status: "success",
-            message: "OTP sent successfully"
-          })
+          res.sendStatus(200)
         }
       } catch (error) {
         console.error(errDetails(error))
 
-        res.json({
-          success: false,
-          message: "Error while sending OTP"
-        })
+        res.sendStatus(500)
       }
     }
   } catch (error) {
     console.error(errDetails(error))
 
-    res.json({
-      success: false,
-      message: "Error setting key in redis",
-    })
+    res.sendStatus(500)
   }
 })
 
