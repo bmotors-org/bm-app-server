@@ -8,37 +8,6 @@ import {sendOtpSms} from "../../messagebird/methods/sendOtpSms"
 
 const router = express.Router()
 
-router.post("/verify-otp", async (req: OtpVerifyRequest, res) => {
-  const {otpCode, phoneNumber} = req.body
-
-  try {
-    const value = await redisClient.get(phoneNumber)
-    if (value === otpCode) {
-      try {
-        await redisClient.del(phoneNumber)
-
-        try {
-          await createCustomer(phoneNumber)
-
-          res.sendStatus(200)
-        } catch (error) {
-          console.error(errDetails(error))
-
-          res.sendStatus(500)
-        }
-      } catch (error) {
-        console.error(errDetails(error))
-
-        res.sendStatus(500)
-      }
-    }
-  } catch (error) {
-    console.error(errDetails(error))
-
-    res.sendStatus(500)
-  }
-})
-
 router.post("/verify-phone-number", async (req: PhoneValidityCheckRequest, res) => {
   const {phoneNumber} = req.body
   const otp = Math.floor(Math.random() * 10000).toString()
@@ -77,6 +46,37 @@ router.post("/verify-phone-number", async (req: PhoneValidityCheckRequest, res) 
 
         if (response) {
           res.sendStatus(200)
+        }
+      } catch (error) {
+        console.error(errDetails(error))
+
+        res.sendStatus(500)
+      }
+    }
+  } catch (error) {
+    console.error(errDetails(error))
+
+    res.sendStatus(500)
+  }
+})
+
+router.post("/verify-otp", async (req: OtpVerifyRequest, res) => {
+  const {otpCode, phoneNumber} = req.body
+
+  try {
+    const value = await redisClient.get(phoneNumber)
+    if (value === otpCode) {
+      try {
+        await redisClient.del(phoneNumber)
+
+        try {
+          await createCustomer(phoneNumber)
+
+          res.sendStatus(200)
+        } catch (error) {
+          console.error(errDetails(error))
+
+          res.sendStatus(500)
         }
       } catch (error) {
         console.error(errDetails(error))
