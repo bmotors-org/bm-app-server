@@ -2,5 +2,8 @@
   "compilerOptions": {
     "esModuleInterop": true, // respected by esbuild
     "target": "ESNext", // respected by esbuild
+    "allowSyntheticDefaultImports": true,
+    "module": "System",
+    "moduleResolution": "Node"
   }
 }
