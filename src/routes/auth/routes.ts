@@ -1,10 +1,11 @@
 import express from "express"
 import {redisClient} from "../../redis"
 import {OtpVerifyRequest, PhoneValidityCheckRequest} from "./interfaces"
-import {createCustomer} from "../../neo4j/methods/createCustomer"
+import {mergeCustomer} from "../../neo4j/methods/mergeCustomer"
 import {mbClient} from "../../messagebird"
 import {errDetails} from "../../error/errDetails"
 import {sendOtpSms} from "../../messagebird/methods/sendOtpSms"
+import {signJwtRsa} from "../../jwt/signRsa";
 
 const router = express.Router()
 
@@ -22,40 +23,23 @@ router.post("/verify-phone-number", async (req: PhoneValidityCheckRequest, res) 
     if (oldVal === null) {
       try {
         const newVal = await redisClient.get(phoneNumber)
-        try {
-          const response = await sendOtpSms(mbClient, phoneNumber, newVal!)
-          console.log("Sent OTP SMS:", response)
-
-          if (response) {
-            res.sendStatus(200)
-          }
-        } catch (error) {
-          console.error(errDetails(error))
-
-          res.sendStatus(500)
-        }
+        await sendOtpSms(mbClient, phoneNumber, newVal!)
+        res.sendStatus(200)
       } catch (error) {
         console.error(errDetails(error))
-
         res.sendStatus(500)
       }
     } else {
       try {
-        const response = await sendOtpSms(mbClient, phoneNumber, oldVal)
-        console.log("Sent OTP SMS:", response)
-
-        if (response) {
-          res.sendStatus(200)
-        }
+        await sendOtpSms(mbClient, phoneNumber, oldVal)
+        res.sendStatus(200)
       } catch (error) {
         console.error(errDetails(error))
-
         res.sendStatus(500)
       }
     }
   } catch (error) {
     console.error(errDetails(error))
-
     res.sendStatus(500)
   }
 })
@@ -67,28 +51,28 @@ router.post("/verify-otp", async (req: OtpVerifyRequest, res) => {
     const value = await redisClient.get(phoneNumber)
     if (value === otpCode) {
       try {
-        await redisClient.del(phoneNumber)
-
-        try {
-          await createCustomer(phoneNumber)
-
-          res.sendStatus(200)
-        } catch (error) {
-          console.error(errDetails(error))
-
-          res.sendStatus(500)
-        }
+        const [, , token] = await Promise.all([
+          redisClient.del(phoneNumber),
+          mergeCustomer(phoneNumber),
+          signJwtRsa(phoneNumber)
+        ])
+        res.status(200).json({token})
       } catch (error) {
         console.error(errDetails(error))
-
         res.sendStatus(500)
       }
+    } else {
+      res.sendStatus(401)
     }
   } catch (error) {
     console.error(errDetails(error))
-
     res.sendStatus(500)
   }
+})
+
+router.get("/test-bearer", (req, res) => {
+  console.log(req.header("Bearer"))
+  res.sendStatus(200)
 })
 
 export {router as authRoutes}
