@@ -1,14 +1,21 @@
-import {Message, MessageBird} from "messagebird"
-import {promisify} from "util"
+import {MessageBird} from "messagebird"
 
-export function sendOtpSms(
+export async function sendOtpSms(
   mbClient: MessageBird,
   phoneNumber: string,
   val: string
-): Promise<Message | null> {
-  return promisify(mbClient.messages.create)({
-    originator: "TestMessage",
-    recipients: [`+8801934400089`],
-    body: "Your OTP is " + val
+) {
+  return await new Promise((resolve, reject) => {
+    mbClient.messages.create({
+      originator: "TestMessage",
+      recipients: [`+8801934400089`],
+      body: "Your OTP is " + val
+    }, (err, response) => {
+      if (err) reject(err)
+      else {
+        console.log(response)
+        resolve(response)
+      }
+    })
   })
 }
