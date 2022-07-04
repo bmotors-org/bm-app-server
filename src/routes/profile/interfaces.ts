@@ -5,3 +5,9 @@ export interface MergeNameRequest extends Request {
     name: string
   }
 }
+
+export interface MergeEmailRequest extends Request {
+  body: {
+    email: string
+  }
+}
