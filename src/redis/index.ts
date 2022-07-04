@@ -1,19 +1,36 @@
 import {createClient} from "redis"
 import {errDetails} from "../error/errDetails"
 
-export const redisClient = createClient({
-  socket: {
-    host: "localhost",
-    port: 6379
-  }
+const socket = {
+  host: "redis",
+  port: 6379
+}
+
+export const redisOtpStore = createClient({
+  socket,
+  database: 0,
+  legacyMode: true
 })
 
-redisClient.on("error", (err) => {
+export const redisSessionStore = createClient({
+  socket,
+  database: 1
+})
+
+redisOtpStore.on("error", (err) => {
   console.log("Redis Client Error", err)
 });
 
+redisSessionStore.on("error", (err) => {
+  console.log("Redis Client Error", err)
+})
+
 try {
-  await redisClient.connect()
+  await Promise.all([
+    redisOtpStore.connect(),
+    redisSessionStore.connect()
+  ])
+  console.log("redis connected successfully")
 } catch (err) {
   console.error(errDetails(err))
 }
