@@ -57,7 +57,7 @@ router.post("/verify-otp", async (req: OtpVerifyRequest, res) => {
       const sessionID = createSessionID()
 
       try {
-        await Promise.all([
+        const [, userData,] = await Promise.all([
           // Delete otp key(phoneNumber) once user is verified
           redisOtpStore.del(phoneNumber),
           mergeCustomer(phoneNumber),
@@ -67,11 +67,16 @@ router.post("/verify-otp", async (req: OtpVerifyRequest, res) => {
             phoneNumber
           })
         ])
+
+        console.log(userData)
+
         setTimeout(() => {
           res.status(200).json({
-            sessionID
+            sessionID,
+            name: userData.name,
+            email: userData.email
           })
-        }, 3000)
+        }, 1000)
 
       } catch (error) {
         console.error(errDetails(error))
@@ -80,7 +85,7 @@ router.post("/verify-otp", async (req: OtpVerifyRequest, res) => {
     } else {
       setTimeout(() => {
         res.sendStatus(401)
-      }, 3000)
+      }, 1000)
     }
   } catch (error) {
     console.error(errDetails(error))
