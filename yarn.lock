@@ -216,10 +216,10 @@
   resolved "https://registry.yarnpkg.com/@redis/bloom/-/bloom-1.0.2.tgz#42b82ec399a92db05e29fffcdfd9235a5fc15cdf"
   integrity sha512-EBw7Ag1hPgFzdznK2PBblc1kdlj5B5Cw3XwI9/oG7tSn85/HKy3X9xHy/8tm/eNXJYHLXHJL/pkwBpFMVVefkw==
 
-"@redis/client@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@redis/client/-/client-1.1.0.tgz#e52a85aee802796ceb14bf27daf9550f51f238b8"
-  integrity sha512-xO9JDIgzsZYDl3EvFhl6LC52DP3q3GCMUer8zHgKV6qSYsq1zB+pZs9+T80VgcRogrlRYhi4ZlfX6A+bHiBAgA==
+"@redis/client@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@redis/client/-/client-1.1.1.tgz#24cb933f9f5be55b8262270a9dd6da5d3d93785a"
+  integrity sha512-IGGyazghVYuqsXv7/AxzMS0HmCPj0JRQX4l0XZ52BdJTUv2lNSnPgfWEE65HnC2gZCEO7STyaJbNultn1i0Y3g==
   dependencies:
     cluster-key-slot "1.1.0"
     generic-pool "3.8.2"
@@ -339,6 +339,13 @@
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.4.tgz#cd667bcfdd025213aafb7ca5915a932590acdcdc"
   integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
+
+"@types/redis@^4.0.11":
+  version "4.0.11"
+  resolved "https://registry.yarnpkg.com/@types/redis/-/redis-4.0.11.tgz#0bb4c11ac9900a21ad40d2a6768ec6aaf651c0e1"
+  integrity sha512-bI+gth8La8Wg/QCR1+V1fhrL9+LZUSWfcqpOj2Kc80ZQ4ffbdL173vQd5wovmoV9i071FU9oP2g6etLuEwb6Rg==
+  dependencies:
+    redis "*"
 
 "@types/serve-static@*":
   version "1.13.10"
@@ -1649,10 +1656,10 @@ merge-descriptors@1.0.1:
   resolved "https://registry.yarnpkg.com/merge-descriptors/-/merge-descriptors-1.0.1.tgz#b00aaa556dd8b44568150ec9d1b953f3f90cbb61"
   integrity sha1-sAqqVW3YtEVoFQ7J0blT8/kMu2E=
 
-messagebird@^3.8.0:
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/messagebird/-/messagebird-3.8.0.tgz#02122ef2d8836392fec445a0c79f1f982fa6b95a"
-  integrity sha512-xVn9gcZl0u/wPOApgqKjDNzmU+REWdgL4KryRiQOlWfNMd+bMWDCSPq2oqbmzjz89oB63H7Dfbng5ThiGmxnuQ==
+messagebird@^3.8.1:
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/messagebird/-/messagebird-3.8.1.tgz#88442536363a4d96440f0aea34cdbc500370c677"
+  integrity sha512-qNt9tRlTin2JUkIGIqDCbC5hxP7+m+krfOpvTcTObxsJV4uZk4Lktg7pI/DZFB9vYYzNu9DaHT0At8jPIz1kpw==
   dependencies:
     jose "^4.8.0"
     safe-buffer "^5.2.1"
@@ -1966,13 +1973,13 @@ readdirp@~3.6.0:
   dependencies:
     picomatch "^2.2.1"
 
-redis@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/redis/-/redis-4.1.0.tgz#6e400e8edf219e39281afe95e66a3d5f7dcf7289"
-  integrity sha512-5hvJ8wbzpCCiuN1ges6tx2SAh2XXCY0ayresBmu40/SGusWHFW86TAlIPpbimMX2DFHOX7RN34G2XlPA1Z43zg==
+redis@*, redis@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/redis/-/redis-4.1.1.tgz#a366a15d47819e11f7cdd35dd9860e1839bc2b35"
+  integrity sha512-vVLYD0RMiDH4YQ1dtmtNU0RX5MAsvEA35Wj+4ZhrSNZXtGK87ktQ0lmI3O3Qn/omoIW456wfOUanqI/RNxagLw==
   dependencies:
     "@redis/bloom" "1.0.2"
-    "@redis/client" "1.1.0"
+    "@redis/client" "1.1.1"
     "@redis/graph" "1.0.1"
     "@redis/json" "1.0.3"
     "@redis/search" "1.0.6"
