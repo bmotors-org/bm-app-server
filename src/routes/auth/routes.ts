@@ -1,11 +1,11 @@
 import express from "express"
-import {redisClient} from "../../redis"
+import {redisOtpStore, redisSessionStore} from "../../redis"
 import {OtpVerifyRequest, PhoneValidityCheckRequest} from "./interfaces"
 import {mergeCustomer} from "../../neo4j/methods/mergeCustomer"
 import {mbClient} from "../../messagebird"
 import {errDetails} from "../../error/errDetails"
 import {sendOtpSms} from "../../messagebird/methods/sendOtpSms"
-import {signJwtRsa} from "../../jwt/signRsa";
+import {createSessionID} from "../../utils/sessionMethods";
 
 const router = express.Router()
 
@@ -14,16 +14,15 @@ router.post("/verify-phone-number", async (req: PhoneValidityCheckRequest, res) 
   const otp = Math.floor(Math.random() * 10000).toString()
 
   try {
-    const oldVal = await redisClient.set(phoneNumber, otp, {
-      EX: 60 * 5, // 5 minutes
-      NX: true, // Only set if key doesn't exist
-      GET: true, // Return the value of the key
-    })
+    const oldOtp = await redisOtpStore.v4.get(phoneNumber)
 
-    if (oldVal === null) {
+    console.log(oldOtp)
+
+    if (!oldOtp) {
       try {
-        const newVal = await redisClient.get(phoneNumber)
-        await sendOtpSms(mbClient, phoneNumber, newVal!)
+        // @ts-ignore
+        await redisOtpStore.set(phoneNumber, otp, 'NX', 'EX', 300)
+        await sendOtpSms(mbClient, phoneNumber, otp)
         res.sendStatus(200)
       } catch (error) {
         console.error(errDetails(error))
@@ -31,7 +30,7 @@ router.post("/verify-phone-number", async (req: PhoneValidityCheckRequest, res) 
       }
     } else {
       try {
-        await sendOtpSms(mbClient, phoneNumber, oldVal)
+        await sendOtpSms(mbClient, phoneNumber, oldOtp)
         res.sendStatus(200)
       } catch (error) {
         console.error(errDetails(error))
@@ -39,40 +38,54 @@ router.post("/verify-phone-number", async (req: PhoneValidityCheckRequest, res) 
       }
     }
   } catch (error) {
-    console.error(errDetails(error))
+    console.error("Error trying to set OTP", errDetails(error))
     res.sendStatus(500)
   }
 })
 
 router.post("/verify-otp", async (req: OtpVerifyRequest, res) => {
-  const {otpCode, phoneNumber} = req.body
+  const {otpCode: sentOtp, phoneNumber} = req.body
+
+  console.log("Sent phone number type:", typeof phoneNumber)
+
+  const ipAddr = req.ip
 
   try {
-    const value = await redisClient.get(phoneNumber)
-    if (value === otpCode) {
+    const redisOtp = await redisOtpStore.v4.get(phoneNumber)
+    console.log("redisOtp", redisOtp, "sentOtp", sentOtp)
+    if (redisOtp === sentOtp) {
+      const sessionID = createSessionID()
+
       try {
-        const [, , token] = await Promise.all([
-          redisClient.del(phoneNumber),
+        await Promise.all([
+          // Delete otp key(phoneNumber) once user is verified
+          redisOtpStore.del(phoneNumber),
           mergeCustomer(phoneNumber),
-          signJwtRsa(phoneNumber)
+          redisSessionStore.json.set(sessionID, '.', {
+            loginAttempt: 0,
+            ipAddr,
+            phoneNumber
+          })
         ])
-        res.status(200).json({token})
+        setTimeout(() => {
+          res.status(200).json({
+            sessionID
+          })
+        }, 3000)
+
       } catch (error) {
         console.error(errDetails(error))
         res.sendStatus(500)
       }
     } else {
-      res.sendStatus(401)
+      setTimeout(() => {
+        res.sendStatus(401)
+      }, 3000)
     }
   } catch (error) {
     console.error(errDetails(error))
     res.sendStatus(500)
   }
-})
-
-router.get("/test-bearer", (req, res) => {
-  console.log(req.header("Bearer"))
-  res.sendStatus(200)
 })
 
 export {router as authRoutes}
