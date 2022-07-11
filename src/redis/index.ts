@@ -8,8 +8,7 @@ const socket = {
 
 export const redisOtpStore = createClient({
   socket,
-  database: 0,
-  legacyMode: true
+  database: 0
 })
 
 export const redisSessionStore = createClient({

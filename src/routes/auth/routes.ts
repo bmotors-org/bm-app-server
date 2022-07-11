@@ -14,14 +14,16 @@ router.post("/verify-phone-number", async (req: PhoneValidityCheckRequest, res) 
   const otp = Math.floor(Math.random() * 10000).toString()
 
   try {
-    const oldOtp = await redisOtpStore.v4.get(phoneNumber)
+    const oldOtp = await redisOtpStore.set(phoneNumber, otp, {
+      EX: 60 * 5,
+      NX: true,
+      GET: true
+    })
 
     console.log(oldOtp)
 
     if (!oldOtp) {
       try {
-        // @ts-ignore
-        await redisOtpStore.set(phoneNumber, otp, 'NX', 'EX', 300)
         await sendOtpSms(mbClient, phoneNumber, otp)
         res.sendStatus(200)
       } catch (error) {
@@ -51,7 +53,7 @@ router.post("/verify-otp", async (req: OtpVerifyRequest, res) => {
   const ipAddr = req.ip
 
   try {
-    const redisOtp = await redisOtpStore.v4.get(phoneNumber)
+    const redisOtp = await redisOtpStore.get(phoneNumber)
     console.log("redisOtp", redisOtp, "sentOtp", sentOtp)
     if (redisOtp === sentOtp) {
       const sessionID = createSessionID()
