@@ -225,6 +225,15 @@
     generic-pool "3.8.2"
     yallist "4.0.0"
 
+"@redis/client@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@redis/client/-/client-1.2.0.tgz#be2ef974881e57276123cb76d08756c03eed946f"
+  integrity sha512-a8Nlw5fv2EIAFJxTDSSDVUT7yfBGpZO96ybZXzQpgkyLg/dxtQ1uiwTc0EGfzg1mrPjZokeBSEGTbGXekqTNOg==
+  dependencies:
+    cluster-key-slot "1.1.0"
+    generic-pool "3.8.2"
+    yallist "4.0.0"
+
 "@redis/graph@1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@redis/graph/-/graph-1.0.1.tgz#eabc58ba99cd70d0c907169c02b55497e4ec8a99"
@@ -320,7 +329,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@^17.0.36":
+"@types/node@*":
   version "17.0.36"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.36.tgz#c0d5f2fe76b47b63e0e0efc3d2049a9970d68794"
   integrity sha512-V3orv+ggDsWVHP99K3JlwtH20R7J4IhI1Kksgc+64q5VxgfRkQG8Ws3MFm/FZOKDYGy9feGFlZ70/HpCNe9QaA==
@@ -329,6 +338,11 @@
   version "10.17.60"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.60.tgz#35f3d6213daed95da7f0f73e75bcc6980e90597b"
   integrity sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==
+
+"@types/node@^18.0.3":
+  version "18.0.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.0.3.tgz#463fc47f13ec0688a33aec75d078a0541a447199"
+  integrity sha512-HzNRZtp4eepNitP+BD6k2L6DROIDG4Q0fm4x+dwfsr6LGmROENnok75VGw40628xf+iR24WeMFcHuuBDUAzzsQ==
 
 "@types/qs@*":
   version "6.9.7"
@@ -1973,13 +1987,25 @@ readdirp@~3.6.0:
   dependencies:
     picomatch "^2.2.1"
 
-redis@*, redis@^4.1.1:
+redis@*:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/redis/-/redis-4.1.1.tgz#a366a15d47819e11f7cdd35dd9860e1839bc2b35"
   integrity sha512-vVLYD0RMiDH4YQ1dtmtNU0RX5MAsvEA35Wj+4ZhrSNZXtGK87ktQ0lmI3O3Qn/omoIW456wfOUanqI/RNxagLw==
   dependencies:
     "@redis/bloom" "1.0.2"
     "@redis/client" "1.1.1"
+    "@redis/graph" "1.0.1"
+    "@redis/json" "1.0.3"
+    "@redis/search" "1.0.6"
+    "@redis/time-series" "1.0.3"
+
+redis@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/redis/-/redis-4.2.0.tgz#1278a265b8aa1e096a585d103bdead027cd04e43"
+  integrity sha512-bCR0gKVhIXFg8zCQjXEANzgI01DDixtPZgIUZHBCmwqixnu+MK3Tb2yqGjh+HCLASQVVgApiwhNkv+FoedZOGQ==
+  dependencies:
+    "@redis/bloom" "1.0.2"
+    "@redis/client" "1.2.0"
     "@redis/graph" "1.0.1"
     "@redis/json" "1.0.3"
     "@redis/search" "1.0.6"
