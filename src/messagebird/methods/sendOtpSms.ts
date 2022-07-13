@@ -8,7 +8,7 @@ export async function sendOtpSms(
   return await new Promise((resolve, reject) => {
     mbClient.messages.create({
       originator: "TestMessage",
-      recipients: [`+8801934400089`],
+      recipients: [`+8801554355868`],
       body: "Your OTP is " + val
     }, (err, response) => {
       if (err) reject(err)
