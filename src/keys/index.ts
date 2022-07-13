@@ -10,12 +10,6 @@ export const keys = {
   // MessageBird
   messagebird: {
     testAccessKey: process.env.MESSAGEBIRD_TEST_ACCESS_KEY!,
-    liveAccessKey: process.env.MESSAGEBIRD_LIVE_ACCESS_KEY!,
-  },
-
-  privateKey: {
-    key: process.env.PRIVATE_KEY!,
-    passphrase: process.env.PRIVATE_KEY_PASSPHRASE!,
   },
   // Port
   port: process.env.PORT!,
