@@ -2,7 +2,7 @@ import {createClient} from "redis"
 import {errDetails} from "../error/errDetails"
 
 const socket = {
-  host: "redis",
+  host: "localhost",
   port: 6379
 }
 
